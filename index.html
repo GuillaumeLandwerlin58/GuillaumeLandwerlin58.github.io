@@ -16,6 +16,10 @@
         <ul id="listePersonne">
 
         </ul>
+        <br/>
+        <input id="message" type="text">
+        <br/>
+        <button id="btn2">Send</button>
 
 </body>
 <script type="module">
@@ -68,10 +72,26 @@
         }
     });
 
+    function envoyerMessage(){
+            const pseudo = document.querySelector("#pseudo").value;
+            const message = document.querySelector("#message").value;
+            const user = {
+                pseudo: pseudo,
+                message: message
+            }
+            set(ref(database, 'messages/' + count), user)
+            count++;
+    }
 
+    onValue(ref(database, 'messages'), (snapshot) => {
+        const data = snapshot.val();
+        for (const key in data) {
 
+        }
+    })
 
     document.querySelector("#btn1").addEventListener("click", addUser);
+    document.querySelector("#btn2").addEventListener("click", envoyerMessage);
 
 
 
