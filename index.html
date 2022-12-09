@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+        <label>Name</label>
+        <input id="name" type="text">
+        <br/>
+        <label>Age</label>
+        <input id="age" type="number">
+        <br/>
+        <button id="btn1">Submit</button>
+
+        <ul id="listePersonne">
+
+        </ul>
+
+</body>
+<script type="module">
+
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js'
+        ;
+    import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js"
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAdDAjrHmGzYLXu_poZGv0VITCJKy-vkok",
+        authDomain: "tpfirebase1-39121.firebaseapp.com",
+        databaseURL: "https://tpfirebase1-39121-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "tpfirebase1-39121",
+        storageBucket: "tpfirebase1-39121.appspot.com",
+        messagingSenderId: "388930650205",
+        appId: "1:388930650205:web:f670d2b177afb264864db4"
+    };
+
+
+    const app = initializeApp(firebaseConfig)
+    const database = getDatabase(app);
+    console.log("database", database)
+
+    let count = 0;
+
+    function addUser(){
+        const name = document.querySelector("#name").value;
+        const age = document.querySelector("#age").value;
+        const userRef = ref(database, 'users/' + count)
+        const newUserRef = push(userRef)
+        console.log("nouvelle clé :", newUserRef)
+        set( userRef,
+            {
+                username: name,
+                age: parseInt(age),
+            }
+        )
+        count++;
+    }
+
+    const listePersonne = document.querySelector("#listePersonne")
+
+    const userRef = ref(database, 'users')
+    onValue(userRef, (snapshot) => {
+        const data = snapshot.val();
+        console.log(data)
+        listePersonne.innerHTML = "";
+        for (const key in data) {
+            listePersonne.innerHTML += `<li>${data[key].username} - ${data[key].age}</li>`
+        }
+    });
+
+
+
+
+    document.querySelector("#btn1").addEventListener("click", addUser);
+
+
+
+</script>
+</html>
